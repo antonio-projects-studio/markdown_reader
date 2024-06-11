@@ -13,11 +13,11 @@ setup(
     description="Library to work with markdown",
     long_description=more_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/antonio-projects-studio/markdown_reader",
+    url="ssh://github.com/antonio-projects-studio/markdown_reader",
     packages=find_packages(),
     install_requires=[
         "PyYAML",
         "python-frontmatter",
-        "fsm @ git+https://github.com/antonio-projects-studio/fsm.git",
+        "fsm @ git+ssh://github.com/antonio-projects-studio/fsm.git",
     ],
 )

@@ -18,6 +18,6 @@ setup(
     install_requires=[
         "PyYAML",
         "python-frontmatter",
-        "fsm @ git+ssh://github.com/antonio-projects-studio/fsm.git",
+        "fsm @ git+https://github.com/antonio-projects-studio/fsm.git",
     ],
 )

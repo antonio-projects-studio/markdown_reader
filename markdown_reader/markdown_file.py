@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__all__ = ["SectionInfo", "MarkdownFile"]
+__all__ = ["MarkdownSection", "MarkdownFile"]
 
 import frontmatter
 from pathlib import Path
@@ -10,13 +10,13 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class SectionInfo:
+class MarkdownSection:
     name: str
     level: int
     root: MarkdownFile
-    parent: SectionInfo | None = field(init=False)
+    parent: MarkdownSection | None = field(init=False)
     content: str = ""
-    children: dict[str, SectionInfo] = field(default_factory=dict)
+    children: dict[str, MarkdownSection] = field(default_factory=dict)
 
     @cached_property
     def path(self) -> str:
@@ -28,9 +28,9 @@ class SectionInfo:
 class MarkdownFile:
     name: str
     frontmatter: Post
-    header: SectionInfo
-    all_sections: dict[str, SectionInfo] = {}
-    current_section: SectionInfo
+    header: MarkdownSection
+    all_sections: dict[str, MarkdownSection] = {}
+    current_section: MarkdownSection
 
     def __init__(self, markdown_path: Path) -> None:
         assert markdown_path.suffix == ".md", "There must be a .md extension file"
@@ -56,7 +56,7 @@ class MarkdownFile:
 
         level, name = self.level_and_name(section_row)
 
-        new_section = SectionInfo(name=name, level=level, root=self)
+        new_section = MarkdownSection(name=name, level=level, root=self)
 
         if level == 1:
             assert getattr(self, "current_section", None) is None, "There should be only one header"
@@ -110,7 +110,7 @@ class MarkdownFile:
     def save(self) -> None:
         section_content = ""
         
-        def content(section: SectionInfo) -> None:
+        def content(section: MarkdownSection) -> None:
             nonlocal section_content
             
             section_content += f"{'#' * section.level} {section.name.replace("_",  " ").title()}{"\n\n" + section.content.replace("\n", "\\\n").replace("\\\n-", "\n-").replace("-->\\\n", "-->\n") if section.content != "" else ""}\n\n" 

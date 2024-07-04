@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 class MarkdownSection:
     name: str
     level: int
-    root: MarkdownFile
+    file: MarkdownFile
     parent: MarkdownSection | None = field(init=False)
     content: str = ""
     children: dict[str, MarkdownSection] = field(default_factory=dict)
@@ -21,7 +21,7 @@ class MarkdownSection:
     @cached_property
     def path(self) -> str:
         if self.parent is None:
-            return self.root.name + "/" + self.name
+            return self.file.name + "/" + self.name
         return self.parent.path + "/" + self.name
 
 
@@ -56,7 +56,7 @@ class MarkdownFile:
 
         level, name = self.level_and_name(section_row)
 
-        new_section = MarkdownSection(name=name, level=level, root=self)
+        new_section = MarkdownSection(name=name, level=level, file=self)
 
         if level == 1:
             assert getattr(self, "current_section", None) is None, "There should be only one header"

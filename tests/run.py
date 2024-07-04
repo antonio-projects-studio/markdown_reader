@@ -18,19 +18,19 @@ if __name__ == "__main__":
     print("Test1")
     assert [section.level for section in result.header.children.values()] == [2, 2, 2]
     print("Test2")
-    assert result.all_sections["default_prompts"].level == 2
+    assert result.all_sections["Default Prompts"].level == 2
     print("Test3")
-    assert list(result.all_sections["default_prompts"].children.keys()) == [
-        "create_agent"
+    assert list(result.all_sections["Default Prompts"].children.keys()) == [
+        "Create Agent"
     ]
 
     print("Test4")
     assert (
-        result.all_sections["create_agent"].path
-        == "test/cache/default_prompts/create_agent"
+        result.all_sections["Create Agent"].path
+        == "test/Cache/Default Prompts/Create Agent"
     )
 
     # print(list(result.header.includes["default_prompts"].includes.values())[0].content)
-    result.header.name = "Cush"
+    result.header.name = "Cache"
     # result.header.content += "\n - LOL"
     result.save()

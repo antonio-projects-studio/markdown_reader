@@ -47,7 +47,7 @@ class MarkdownFile:
             if sb == "#":
                 level += 1
                 continue
-            name = row.replace("#", "").strip().lower().replace(" ", "_")
+            name = row.replace("#", "").strip()
             break
 
         return level, name

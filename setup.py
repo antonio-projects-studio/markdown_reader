@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="markdown_reader",
-    version="0.0.1",
+    version="2.0.0",
     author="Antonio Rodrigues",
     author_email="antonio.projects.studio@gmail.com",
     description="Library to work with markdown",
@@ -18,6 +18,5 @@ setup(
     install_requires=[
         "PyYAML",
         "python-frontmatter",
-        "fsm @ git+https://github.com/antonio-projects-studio/fsm.git",
     ],
 )

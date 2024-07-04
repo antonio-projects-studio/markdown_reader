@@ -31,6 +31,6 @@ if __name__ == "__main__":
     )
 
     # print(list(result.header.includes["default_prompts"].includes.values())[0].content)
-    # result.header.name = "Cush"
+    result.header.name = "Cush"
     # result.header.content += "\n - LOL"
-    # result.save()
+    result.save()

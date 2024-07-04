@@ -123,4 +123,4 @@ class MarkdownFile:
         self.frontmatter.content = section_content
         
         with open(self.markdown_path, "w") as f:
-            f.write(frontmatter.dumps(self.frontmatter))
+            f.write(frontmatter.dumps(self.frontmatter) + "\n")

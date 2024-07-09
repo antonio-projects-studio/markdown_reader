@@ -13,7 +13,7 @@ setup(
     description="Library to work with markdown",
     long_description=more_description,
     long_description_content_type="text/markdown",
-    url="ssh://github.com/antonio-projects-studio/markdown_reader",
+    url="https://github.com/antonio-projects-studio/markdown_reader",
     packages=find_packages(),
     install_requires=[
         "PyYAML",

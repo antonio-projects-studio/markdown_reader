@@ -17,6 +17,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         "PyYAML~=6.0.2",
-        "python-frontmatter~=2.5.2",
+        "python-frontmatter~=1.1.0",
     ],
 )

@@ -16,7 +16,7 @@ setup(
     url="https://github.com/antonio-projects-studio/markdown_reader",
     packages=find_packages(),
     install_requires=[
-        "PyYAML==2.5.2",
-        "python-frontmatter==2.5.2",
+        "PyYAML~=6.0.2",
+        "python-frontmatter~=2.5.2",
     ],
 )

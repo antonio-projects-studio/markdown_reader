@@ -151,6 +151,9 @@ class MarkdownFile:
                     if clear:
                         self.header.children = {}
 
+                    if not self.header.content:
+                        self.header.content = "***Тут пишите ваш запрос***"
+
                     self.header.add_section(
                         "System Prompt",
                         content="Отвечай в формате Markdown",

@@ -7,6 +7,7 @@ import frontmatter
 from copy import copy
 from pathlib import Path
 from frontmatter import Post
+from typing import Literal, overload
 from functools import cached_property
 from dataclasses import dataclass, field
 
@@ -121,6 +122,46 @@ class MarkdownFile:
             parent.children.pop(name)
 
         self.update()
+
+    @overload
+    def get_template(self, template: Literal["llm"]) -> None:
+        pass
+
+    @overload
+    def get_template(
+        self, template: Literal["llm"], *, replace_if_exist: Literal[True]
+    ) -> None:
+        pass
+
+    @overload
+    def get_template(self, template: Literal["llm"], *, clear: Literal[True]) -> None:
+        pass
+
+    def get_template(
+        self,
+        template: Literal["llm"],
+        *,
+        replace_if_exist: bool = False,
+        clear: bool = False,
+    ) -> None:
+
+        match template:
+            case "llm":
+                try:
+                    if clear:
+                        self.header.children = {}
+
+                    self.header.add_section(
+                        "System Prompt",
+                        content="Отвечай в формате Markdown",
+                        replace_if_exist=replace_if_exist,
+                    )
+                    self.header.add_section(
+                        "History", replace_if_exist=replace_if_exist
+                    )
+                    self.save()
+                except:
+                    pass
 
     def level_and_name(self, row: str) -> tuple[int, str]:
         row.strip()

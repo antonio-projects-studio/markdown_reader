@@ -9,11 +9,11 @@ setup(
     name="markdown_reader",
     version="2.0.0",
     author="Antonio Rodrigues",
-    author_email="antonio.projects.studio@gmail.com",
+    author_email="axtonio.code@gmail.com",
     description="Library to work with markdown",
     long_description=more_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/antonio-projects-studio/markdown_reader",
+    url="https://github.com/axtonio/markdown_reader",
     packages=find_packages(),
     install_requires=[
         "PyYAML~=6.0.2",

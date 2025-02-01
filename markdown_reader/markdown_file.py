@@ -322,7 +322,7 @@ class MarkdownFile:
             def _add_level(sub_section: MarkdownSection):
                 nonlocal table_of_content
 
-                table_of_content += f"\n{" " * (sub_section.level - 1) * 2}- [{sub_section.name}](#{sub_section.name.lower()})"
+                table_of_content += f"\n{" " * (sub_section.level - 1) * 2}- [{sub_section.name}](#{sub_section.name.lower().replace(" ", "-")})"
 
                 for child in sub_section.children.values():
                     _add_level(child)

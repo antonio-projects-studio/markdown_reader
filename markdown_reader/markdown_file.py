@@ -11,7 +11,7 @@ from frontmatter import Post
 from typing import Literal, overload
 from functools import cached_property
 from dataclasses import dataclass, field
-
+from terminal_app.naming import generate_path
 
 LINK_PATTERN = r"\!\[.*?\]\((.*?)\)"
 
@@ -105,15 +105,23 @@ class MarkdownFile:
 
     def __init__(
         self,
-        markdown_path: Path,
+        markdown_path: Path | str,
         table_of_content_name: str = "Content",
-        replace: bool = False,
+        mode: Literal["r", "w", "generate_path"] = "r",
     ) -> None:
+
+        if isinstance(markdown_path, str):
+            markdown_path = Path(markdown_path)
+
+        if mode == "generate_path":
+            markdown_path = generate_path(markdown_path)
+        else:
+            open(markdown_path, mode)
+
         assert markdown_path.suffix == ".md", "There must be a .md extension file"
         self.markdown_path = markdown_path
         self.name = self.markdown_path.stem
         self.table_of_content = table_of_content_name
-        self.replace = replace
         self.refresh_from_file()
 
     def delete_section(self, name: str) -> None:
@@ -152,24 +160,29 @@ class MarkdownFile:
 
         match template:
             case "llm":
+                if clear:
+                    self.header.children = {}
+
+                if not self.header.content:
+                    self.header.content = "***Тут пишите ваш запрос***"
+
                 try:
-                    if clear:
-                        self.header.children = {}
-
-                    if not self.header.content:
-                        self.header.content = "***Тут пишите ваш запрос***"
-
                     self.header.add_section(
                         "System Prompt",
                         content="Отвечай в формате Markdown",
                         replace_if_exist=replace_if_exist,
                     )
+                except:
+                    pass
+
+                try:
                     self.header.add_section(
                         "History", replace_if_exist=replace_if_exist
                     )
-                    self.save()
                 except:
                     pass
+
+                self.save()
 
     def level_and_name(self, row: str) -> tuple[int, str]:
         row.strip()
@@ -235,6 +248,7 @@ class MarkdownFile:
         for row in self.frontmatter.content.splitlines(keepends=True):
             if row.startswith("```"):
                 code = not code
+
             if row.startswith("#") and not code:
                 if getattr(self, attr, None) is not None:
                     self.current_section.content = content.strip()
@@ -243,10 +257,7 @@ class MarkdownFile:
                 content = ""
                 continue
 
-            if self.replace:
-                content += row.replace("\\\n", "\n")
-            else:
-                content += row
+            content += row
 
         try:
             self.current_section.content = content.strip()
@@ -270,47 +281,7 @@ class MarkdownFile:
         def make_content(section: MarkdownSection) -> None:
             nonlocal section_content
 
-            code = False
-            lines: list[str] = []
-            section_lines = section.content.split("\n")
-            if self.replace:
-                for ind, line in enumerate(section_lines):
-
-                    if ind == len(section_lines) - 1:
-                        lines.append(line)
-                        continue
-
-                    if not line:
-                        lines.append(f"\n")
-                        try:
-                            lines[ind - 1] = lines[ind - 1].replace("\\\n", "\n")
-                        except:
-                            pass
-
-                        continue
-
-                    if line.strip().startswith("-"):
-                        lines.append(f"{line}\n")
-                        try:
-                            lines[ind - 1] = lines[ind - 1].replace("\\\n", "\n")
-                        except:
-                            pass
-                        continue
-
-                    if line.startswith("```"):
-                        code = not code
-
-                    if not code:
-                        lines.append(f"{line}\\\n")
-                    else:
-                        lines.append(f"{line}\n")
-
-                content = "".join(lines)
-
-                section_content += f"{'#' * section.level} {section.name}{"\n\n" + content.replace("\\\n-", "\n-").replace("-->\\\n", "-->\n") if section.content != "" else ""}\n\n"
-
-            else:
-                section_content += f"{'#' * section.level} {section.name}{("\n\n" + section.content) if section.content else ""}\n\n"
+            section_content += f"{'#' * section.level} {section.name}{("\n\n" + section.content) if section.content else ""}\n\n"
 
             for section in section.children.values():
                 make_content(section)

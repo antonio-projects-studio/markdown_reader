@@ -349,7 +349,7 @@ class MarkdownFile:
     ) -> Path:
 
         if output_file is None:
-            output_file = self.markdown_path.parent / f"{self.markdown_path}.{to}"
+            output_file = self.markdown_path.parent / f"{self.markdown_path.stem}.{to}"
 
         pypandoc.convert_file(
             source_file=self.markdown_path.as_posix(),

@@ -375,7 +375,7 @@ class MarkdownFile:
             "-V",
             "urlcolor=blue",
         ],
-    ):
+    ) -> Path:
 
         if output_file is None:
             output_file = self.markdown_path.parent / f"{self.markdown_path}.{to}"
@@ -386,3 +386,5 @@ class MarkdownFile:
             outputfile=output_file.as_posix(),
             extra_args=extra_args,
         )
+
+        return output_file

@@ -15,8 +15,5 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/axtonio/markdown_reader",
     packages=find_packages(),
-    install_requires=[
-        "PyYAML~=6.0.2",
-        "python-frontmatter~=1.1.0",
-    ],
+    install_requires=["PyYAML~=6.0.2", "python-frontmatter~=1.1.0", "pypandoc~=1.15"],
 )

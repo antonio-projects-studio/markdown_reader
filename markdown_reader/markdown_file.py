@@ -3,6 +3,7 @@ from __future__ import annotations
 __all__ = ["MarkdownSection", "MarkdownFile"]
 
 import re
+import pypandoc
 import frontmatter
 from copy import copy
 from pathlib import Path
@@ -103,7 +104,10 @@ class MarkdownFile:
     current_section: MarkdownSection
 
     def __init__(
-        self, markdown_path: Path, table_of_content_name: str = "Content", replace: bool = False
+        self,
+        markdown_path: Path,
+        table_of_content_name: str = "Content",
+        replace: bool = False,
     ) -> None:
         assert markdown_path.suffix == ".md", "There must be a .md extension file"
         self.markdown_path = markdown_path
@@ -238,7 +242,7 @@ class MarkdownFile:
                 self.process_section(row)
                 content = ""
                 continue
-                
+
             if self.replace:
                 content += row.replace("\\\n", "\n")
             else:
@@ -271,7 +275,7 @@ class MarkdownFile:
             section_lines = section.content.split("\n")
             if self.replace:
                 for ind, line in enumerate(section_lines):
-                    
+
                     if ind == len(section_lines) - 1:
                         lines.append(line)
                         continue
@@ -307,7 +311,6 @@ class MarkdownFile:
 
             else:
                 section_content += f"{'#' * section.level} {section.name}{("\n\n" + section.content) if section.content else ""}\n\n"
-                
 
             for section in section.children.values():
                 make_content(section)
@@ -348,3 +351,38 @@ class MarkdownFile:
         self.update()
         with open(self.markdown_path, "w") as f:
             f.write(frontmatter.dumps(self.frontmatter) + "\n")
+
+    def export(
+        self,
+        output_file: Path | None = None,
+        to: Literal["pdf"] = "pdf",
+        extra_args: list[str] = [
+            "--pdf-engine=xelatex",
+            "-V",
+            "header-includes=\\usepackage{textcomp}",
+            "-V",
+            "header-includes=\\usepackage{amsmath}",
+            "-V",
+            "header-includes=\\usepackage{babel}",
+            "-V",
+            "mainfont=Arial",
+            "-V",
+            "geometry:margin=2cm",
+            "-V",
+            "colorlinks=true",
+            "-V",
+            "linkcolor=blue",
+            "-V",
+            "urlcolor=blue",
+        ],
+    ):
+
+        if output_file is None:
+            output_file = self.markdown_path.parent / f"{self.markdown_path}.{to}"
+
+        pypandoc.convert_file(
+            source_file=self.markdown_path.as_posix(),
+            to=to,
+            outputfile=output_file.as_posix(),
+            extra_args=extra_args,
+        )
